@@ -386,7 +386,7 @@ configure:13646: $? = 0
 configure:13646: result: yes
 configure:13652: checking for fullfsync
 configure:13652: gcc -o conftest -g -O2   conftest.c  >&5
-/usr/bin/ld: /tmp/ccPy5OAM.o: in function `main':
+/usr/bin/ld: /tmp/ccK1TSaw.o: in function `main':
 /workspaces/IST688_COMPASS_Project/sqlite-autoconf-3430100/conftest.c:52: undefined reference to `fullfsync'
 collect2: error: ld returned 1 exit status
 configure:13652: $? = 1
@@ -634,7 +634,7 @@ configure:13938: $? = 0
 configure:13938: result: yes
 configure:13945: checking for library containing tgetent
 configure:13975: gcc -o conftest -g -O2   conftest.c  >&5
-/usr/bin/ld: /tmp/cc0bBhOv.o: in function `main':
+/usr/bin/ld: /tmp/ccsXaTnn.o: in function `main':
 /workspaces/IST688_COMPASS_Project/sqlite-autoconf-3430100/conftest.c:38: undefined reference to `tgetent'
 collect2: error: ld returned 1 exit status
 configure:13975: $? = 1
@@ -685,7 +685,7 @@ configure:13975: $? = 0
 configure:13995: result: -ltermcap
 configure:14004: checking for library containing readline
 configure:14034: gcc -o conftest -g -O2   conftest.c -ltermcap  >&5
-/usr/bin/ld: /tmp/ccQ5cHkC.o: in function `main':
+/usr/bin/ld: /tmp/ccrC4Hc9.o: in function `main':
 /workspaces/IST688_COMPASS_Project/sqlite-autoconf-3430100/conftest.c:38: undefined reference to `readline'
 collect2: error: ld returned 1 exit status
 configure:14034: $? = 1
@@ -736,7 +736,7 @@ configure:14034: $? = 0
 configure:14054: result: -lreadline
 configure:14094: checking for library containing pthread_create
 configure:14124: gcc -o conftest -g -O2   conftest.c  >&5
-/usr/bin/ld: /tmp/cczf0qDp.o: in function `main':
+/usr/bin/ld: /tmp/cc6APSpZ.o: in function `main':
 /workspaces/IST688_COMPASS_Project/sqlite-autoconf-3430100/conftest.c:39: undefined reference to `pthread_create'
 collect2: error: ld returned 1 exit status
 configure:14124: $? = 1
@@ -792,7 +792,7 @@ configure:14183: $? = 0
 configure:14203: result: none required
 configure:14227: checking for library containing dlopen
 configure:14257: gcc -o conftest -g -O2   conftest.c -lpthread  >&5
-/usr/bin/ld: /tmp/ccKdGi32.o: in function `main':
+/usr/bin/ld: /tmp/cckq4m86.o: in function `main':
 /workspaces/IST688_COMPASS_Project/sqlite-autoconf-3430100/conftest.c:39: undefined reference to `dlopen'
 collect2: error: ld returned 1 exit status
 configure:14257: $? = 1
@@ -853,7 +853,7 @@ conftest.c:35:6: warning: conflicting types for built-in function 'ceil'; expect
       |      ^~~~
 conftest.c:1:1: note: 'ceil' is declared in header '<math.h>'
     1 | /* confdefs.h */
-/usr/bin/ld: /tmp/ccM2BRzU.o: in function `main':
+/usr/bin/ld: /tmp/cc7xVvZU.o: in function `main':
 /workspaces/IST688_COMPASS_Project/sqlite-autoconf-3430100/conftest.c:39: undefined reference to `ceil'
 collect2: error: ld returned 1 exit status
 configure:14342: $? = 1
@@ -939,7 +939,7 @@ configure:14597: $? = 0
 configure:14597: result: yes
 configure:14602: checking for library containing deflate
 configure:14632: gcc -o conftest -g -O2   conftest.c -lm -ldl -lpthread  >&5
-/usr/bin/ld: /tmp/ccKrAp5h.o: in function `main':
+/usr/bin/ld: /tmp/ccmQncRn.o: in function `main':
 /workspaces/IST688_COMPASS_Project/sqlite-autoconf-3430100/conftest.c:41: undefined reference to `deflate'
 collect2: error: ld returned 1 exit status
 configure:14632: $? = 1

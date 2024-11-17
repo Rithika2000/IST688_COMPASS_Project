@@ -1,4 +1,3 @@
-
 import streamlit as st
 
 Compass_code = st.Page("COMPASS_code.py", title = 'Compass_code')

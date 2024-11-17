@@ -5,6 +5,7 @@ from chromadb import PersistentClient
 import pandas as pd
 from docx import Document
 
+
 # Ensure SQLite compatibility
 __import__('pysqlite3')
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')

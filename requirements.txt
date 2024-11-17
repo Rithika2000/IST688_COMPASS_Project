@@ -1,0 +1,15 @@
+streamlit
+openai
+pdfplumber
+bs4
+cohere
+anthropic
+mistral
+transformers
+tiktoken
+vertexai
+PyPDF2
+chromadb
+pysqlite3-binary
+protobuf==3.20
+python-docx

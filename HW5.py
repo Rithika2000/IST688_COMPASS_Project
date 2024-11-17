@@ -1,5 +1,5 @@
 import openai
-import streamlit as st
+import chatbot as st
 import os
 import glob
 import sys

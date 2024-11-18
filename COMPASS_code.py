@@ -4,114 +4,81 @@ import streamlit as st
 from chromadb import PersistentClient
 import pandas as pd
 from docx import Document
-
+import os
 
 # Ensure SQLite compatibility
-__import__('pysqlite3')
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+try:
+    __import__('pysqlite3')
+    sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+    st.write("pysqlite3 successfully imported.")
+except ImportError:
+    st.write("pysqlite3 not available, falling back to sqlite3.")
+
+# Check OpenAI API Key in secrets
+if not hasattr(st, "secrets") or "OpenAI_key" not in st.secrets:
+    st.error("Missing OpenAI API key in Streamlit secrets. Please configure it.")
+    st.stop()
+else:
+    st.write("OpenAI API key found.")
 
 # Set OpenAI API Key
-openai.api_key = st.secrets["OpenAI_key"]  # Ensure this is set in Streamlit secrets
+try:
+    openai.api_key = st.secrets["OpenAI_key"]
+    st.write("OpenAI API key initialized.")
+except Exception as e:
+    st.error(f"Error initializing OpenAI API key: {e}")
+    st.stop()
 
 # Initialize ChromaDB client
-client = PersistentClient(path="knowledge_base")
+try:
+    client = PersistentClient(path="knowledge_base")
+    st.write("ChromaDB Client Initialized.")
+except Exception as e:
+    st.error(f"Error initializing ChromaDB Client: {e}")
+    st.stop()
 
-# Extract text from UNI_DATA.docx
-def extract_university_data(file_path):
-    document = Document(file_path)
-    universities = []
-    for paragraph in document.paragraphs:
-        if paragraph.text.strip():
-            universities.append(paragraph.text.strip())
-    return universities
+# Verify required files
+file_paths = {
+    "UNI_DATA": "/workspaces/IST688_COMPASS_Project/uni100.docx",
+    "JOB_MARKET": "/workspaces/IST688_COMPASS_Project/Employment Projections.csv",
+    "LIVING_EXPENSES": "/workspaces/IST688_COMPASS_Project/avglivingexpenses.csv"
+}
 
-# Store data in ChromaDB
-def store_in_chromadb(collection_name, client, data):
-    collection = client.get_or_create_collection(collection_name)
-    for idx, item in enumerate(data):
-        collection.add(
-            documents=[item],
-            metadatas=[{"id": idx}],
-            ids=[str(idx)]
-        )
-    return f"Stored {len(data)} items in collection '{collection_name}'"
+for name, path in file_paths.items():
+    if not os.path.exists(path):
+        st.error(f"File not found: {name} at {path}")
+        st.stop()
+    else:
+        st.write(f"{name} file found: {path}")
 
-# Query ChromaDB
-def query_chromadb(collection_name, query_text):
-    try:
-        collection = client.get_collection(collection_name)
-        results = collection.query(query_texts=[query_text], n_results=5)
-        return [result["document"] for result in results]
-    except Exception as e:
-        return [f"Error querying {collection_name}: {str(e)}"]
-
-# Streamlit chatbot interface
+# Chatbot interface
 def main():
+    # Debugging log to confirm main() execution
+    st.write("Main function started...")
+
+    # Display chatbot UI
     st.title("University Recommendation Chatbot")
     st.markdown("### Get personalized recommendations!")
 
-    # Initialize session state
-    if "messages" not in st.session_state:
-        st.session_state.messages = [
-            {"role": "system", "content": "You are a helpful assistant providing university recommendations."}
-        ]
+    # Input box and button
+    user_input = st.text_input("Enter your preferences (e.g., 'I want a university in California for AI'):")
+    if st.button("Send"):
+        st.write(f"You entered: {user_input}")
 
-    # User input section
-    user_input = st.text_input(
-        "Your preferences (e.g., 'I want a university in California for Computer Science')", key="user_input"
-    )
-    if st.button("Send") and user_input:
-        st.session_state.messages.append({"role": "user", "content": user_input})
+        # Mock response to simulate chatbot functionality
+        st.write("Processing your request...")
+        st.write("**Mock Response:**")
+        st.write("**University Recommendations:** Stanford, MIT, UC Berkeley")
+        st.write("**Job Market Trends:** Software Engineer, Data Scientist")
+        st.write("**Living Expenses:** California: High, Texas: Medium")
 
-        # Query ChromaDB
-        uni_recommendations = query_chromadb("university_data", user_input)
-        job_recommendations = query_chromadb("job_market_data", user_input)
-        living_expense_recommendations = query_chromadb("living_expenses_data", user_input)
-
-        # Summarize recommendations
-        recommendation_summary = (
-            f"**University Recommendations:**\n{', '.join(uni_recommendations)}\n\n"
-            f"**Job Market Trends:**\n{', '.join(job_recommendations)}\n\n"
-            f"**Living Expenses:**\n{', '.join(living_expense_recommendations)}"
-        )
-
-        # Use OpenAI to refine the response
-        openai_response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=st.session_state.messages + [{"role": "assistant", "content": recommendation_summary}]
-        )
-
-        assistant_response = openai_response.choices[0].message["content"]
-        st.session_state.messages.append({"role": "assistant", "content": assistant_response})
-
-    # Display chat history
-    for message in st.session_state.messages:
-        if message["role"] == "user":
-            st.markdown(f"**You:** {message['content']}")
-        else:
-            st.markdown(f"**Chatbot:** {message['content']}")
+    # Debugging log to confirm the end of main()
+    st.write("Main function execution completed.")
 
 if __name__ == "__main__":
-    # Load and store datasets in ChromaDB (run once in Streamlit Cloud)
-    uni_data_path = "UNI_DATA.docx"
-    job_market_path = "Employment Projections.csv"
-    living_expenses_path = "avglivingexpenses.csv"
+    # Debugging log for script entry point
+    st.write("Initializing the Streamlit app...")
 
-    # Extract University Data
-    university_data = extract_university_data(uni_data_path)
-
-    # Load Employment Projections Data
-    job_market_data = pd.read_csv(job_market_path)
-    job_titles = job_market_data["Occupation Title"].tolist()
-
-    # Load Living Expenses Data
-    living_expenses_data = pd.read_csv(living_expenses_path)
-    states = living_expenses_data["State"].tolist()
-
-    # Store in ChromaDB
-    store_in_chromadb("university_data", client, university_data)
-    store_in_chromadb("job_market_data", client, job_titles)
-    store_in_chromadb("living_expenses_data", client, states)
-
-    # Start Streamlit Interface
+    # Load all data (mock for now)
+    st.write("All initialization steps completed successfully.")
     main()
